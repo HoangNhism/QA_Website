@@ -59,19 +59,77 @@ function createStars() {
 window.addEventListener('load', function() {
     createConfetti();
     createStars();
+    
+    // Flag to track if audio has been played
+    let audioPlayed = false;
+    
+    // Function to play audio
+    function playAudio() {
+        if (!audioPlayed) {
+            const audio = document.getElementById('congratAudio');
+            if (audio) {
+                audio.play().catch(function(error) {
+                    console.log('Audio play failed:', error);
+                });
+                audioPlayed = true;
+            }
+        }
+    }
+    
+    // Play audio after 1.5s delay on first user interaction
+    // Listen for click
+    document.addEventListener('click', function() {
+        playAudio();
+    }, { once: true });
+    
+    // Listen for keyboard
+    document.addEventListener('keydown', function() {
+        playAudio();
+    }, { once: true });
+    
+    // Also try to play after 1.5s in case user interacts before that
+    setTimeout(function() {
+        playAudio();
+    }, 1500);
 });
+
+// Stop audio before video plays
+setTimeout(function() {
+    const audio = document.getElementById('backgroundAudio');
+    if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+    }
+}, 11000);
 
 // Reset animation after 20 seconds
 setTimeout(function() {
-    document.body.innerHTML = 
-    '<div class="first-msg fade-in-msg" style="text-align: center; color: white; padding: 50px; font-size: 1.5em;">You are Awesome! Enjoy Your Success! 🚀</div>';
-}, 7000);
-setTimeout(function () {
-  document.body.innerHTML =
-    '<div class="first-msg grow-text" style="text-align: center; color: white; padding: 50px; font-size: 1.5em;">There\'s more</div>';
+    const container = document.querySelector('.container');
+    if (container) {
+        container.innerHTML = '<div class="first-msg fade-in-msg" style="text-align: center; color: white; padding: 50px; font-size: 1.5em;">You are Awesome! Enjoy Your Success! 🚀</div>';
+    }
 }, 9000);
+setTimeout(function () {
+    const container = document.querySelector('.container');
+    if (container) {
+        container.innerHTML = '<div class="first-msg grow-text" style="text-align: center; color: white; padding: 50px; font-size: 1.5em;">There\'s more</div>';
+    }
+}, 13000);
 
 setTimeout(function () {
-  document.body.innerHTML =
-    '<div style="text-align: center; width: 100%; height: 100vh;"><video width="100%" height="100%" controls autoplay style="object-fit: contain;"><source src="Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster).mp4" type="video/mp4">Your browser does not support the video tag.</video></div>';
-}, 12000);
+    document.body.style.overflow = 'hidden';
+    const container = document.querySelector('.container');
+    if (container) {
+        container.innerHTML = '<div style="text-align: center; width: 100%; height: 100vh;"><video id="myVideo" width="100%" height="100%" controls style="object-fit: contain;"><source src="Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster).mp4" type="video/mp4">Your browser does not support the video tag.</video></div>';
+    }
+    
+    // Force play the video
+    setTimeout(function() {
+        var video = document.getElementById('myVideo');
+        if (video) {
+            video.play().catch(function(error) {
+                console.log('Autoplay failed:', error);
+            });
+        }
+    }, 100);
+}, 16000);
